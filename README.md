@@ -95,8 +95,7 @@ Add to `claude_desktop_config.json` (usually `%APPDATA%\Claude\claude_desktop_co
   "mcpServers": {
     "PDFDashboardWithMCP": {
       "command": "uv",
-      "args": ["run", "mcp_server/server.py"],
-      "cwd": "/absolute/path/to/PDFDashboardWithMCP"
+      "args": ["run", "--directory", "/absolute/path/to/PDFDashboardWithMCP", "mcp_server/server.py"]
     }
   }
 }
@@ -114,8 +113,7 @@ Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.jso
   "mcpServers": {
     "PDFDashboardWithMCP": {
       "command": "uv",
-      "args": ["run", "mcp_server/server.py"],
-      "cwd": "/absolute/path/to/PDFDashboardWithMCP"
+      "args": ["run", "--directory", "/absolute/path/to/PDFDashboardWithMCP", "mcp_server/server.py"]
     }
   }
 }
@@ -123,7 +121,7 @@ Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.jso
 
 </details>
 
-Replace `/absolute/path/to/PDFDashboardWithMCP` with the actual path to your cloned repository.
+Replace `/absolute/path/to/PDFDashboardWithMCP` with the absolute path to your cloned repository.
 
 > Ollama must be running with `nomic-embed-text` pulled for the MCP server to load collections.
 

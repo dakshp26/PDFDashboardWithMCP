@@ -2,8 +2,7 @@
   "mcpServers": {
     "PDFDashboardWithMCP": {
       "command": "uv",
-      "args": ["run", "mcp_server/server.py"],
-      "cwd": "<your_absolute_path_to_PDFDashboardWithMCP>"
+      "args": ["run", "--directory", "/absolute/path/to/PDFDashboardWithMCP", "mcp_server/server.py"]
     }
   }
 }
