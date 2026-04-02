@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+
+# RAG persisted data (PDFs and Chroma index)
+data/
+
+.claude
+.cursor
+.vscode
+
+*.jpg
+*.png
+*.pdf
+
+.mcp.json
+
+# Windows bash crash dumps
+*.stackdump
+
+CLAUDE.md

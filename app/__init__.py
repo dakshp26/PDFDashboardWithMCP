@@ -1,0 +1,1 @@
+"""PDFDashboardWithMCP app package."""
