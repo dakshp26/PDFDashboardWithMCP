@@ -17,13 +17,20 @@ Upload PDFs, extract their text via OCR, and chat with the document using a loca
 
 ## Setup
 
-**1. Install dependencies**
+**1. Clone the repository**
+
+```powershell
+git clone https://github.com/dakshp26/PDFDashboardWithMCP.git
+cd PDFDashboardWithMCP
+```
+
+**2. Install dependencies**
 
 ```powershell
 uv sync
 ```
 
-**2. Pull Ollama models**
+**3. Pull Ollama models**
 
 ```powershell
 ollama pull qwen2.5:3b       # chat / agent (or any other chat model)
@@ -31,7 +38,7 @@ ollama pull nomic-embed-text # embeddings
 ollama pull glm-ocr          # OCR fallback (scanned PDFs)
 ```
 
-**3. Run the app**
+**4. Run the app**
 
 ```powershell
 uv run streamlit run app/main.py
@@ -45,6 +52,8 @@ Open [http://localhost:8501](http://localhost:8501) in your browser.
 2. **Chat** — switch to the Chat page, pick your PDF and any installed Ollama model from the dropdowns, and ask questions
 
 ## Project Structure
+
+
 
 ```
 app/
@@ -66,6 +75,9 @@ data/                             # Runtime data (gitignored)
 └── process_chroma/               # Chroma vector collections (one per PDF)
 ```
 
+> [!NOTE]
+> For a detailed breakdown of every file, execution order, and data flow, see [APP_STRUCTURE.md](APP_STRUCTURE.md).
+
 ## MCP Server
 
 The included MCP server exposes the vector store to any MCP-compatible client (Claude Desktop, Cursor, etc.) with two tools:
@@ -73,9 +85,10 @@ The included MCP server exposes the vector store to any MCP-compatible client (C
 - **`list_documents`** — returns all indexed document collections
 - **`get_document(document, query)`** — searches a collection and returns relevant chunks
 
-### Claude Desktop
+<details>
+<summary>Claude Desktop</summary>
 
-Add to `claude_desktop_config.json` (usually `%APPDATA%\Claude\claude_desktop_config.json` on Windows OR in .mcp.json within project to keep it limited to a project):
+Add to `claude_desktop_config.json` (usually `%APPDATA%\Claude\claude_desktop_config.json` on Windows), or use `.mcp.json` in the project root to keep it project-scoped:
 
 ```json
 {
@@ -89,7 +102,10 @@ Add to `claude_desktop_config.json` (usually `%APPDATA%\Claude\claude_desktop_co
 }
 ```
 
-### Cursor
+</details>
+
+<details>
+<summary>Cursor</summary>
 
 Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.json`):
 
@@ -104,6 +120,8 @@ Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.jso
   }
 }
 ```
+
+</details>
 
 Replace `/absolute/path/to/PDFDashboardWithMCP` with the actual path to your cloned repository.
 
