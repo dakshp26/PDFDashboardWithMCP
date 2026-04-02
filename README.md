@@ -1,4 +1,4 @@
-# PDFDashboardWithMCP
+# PDF Dashboard With MCP
 
 Upload PDFs, extract their text via OCR, and chat with the document using a local LLM. Everything runs on your machine through [Ollama](https://ollama.com) — no API keys or internet connection required.
 
