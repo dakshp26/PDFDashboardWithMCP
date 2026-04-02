@@ -78,6 +78,19 @@ data/                             # Runtime data (gitignored)
 > [!NOTE]
 > For a detailed breakdown of every file, execution order, and data flow, see [APP_STRUCTURE.md](APP_STRUCTURE.md).
 
+## Streamlit Dashboard
+
+The app is a three-page Streamlit dashboard:
+
+| Page | Description |
+|------|-------------|
+| **Home** | Welcome page with a quick-start overview |
+| **Upload PDF** | Select a PDF, watch the extraction pipeline run in real time (text layer → OCR fallback → chunking → embedding), then download the extracted markdown |
+| **PDF Library** | Browse all previously uploaded PDFs; view extracted markdown and chunk previews without re-running the pipeline |
+| **Chat** | Pick an indexed PDF and any installed Ollama model, ask questions, and get answers with inline source citations |
+
+The pipeline progress is shown live inside an `st.status` block. After a PDF is processed its vector collection persists in `data/process_chroma/`, so the next session loads instantly without re-running the pipeline.
+
 ## MCP Server
 
 The included MCP server exposes the vector store to any MCP-compatible client (Claude Desktop, Cursor, etc.) with two tools:
@@ -118,6 +131,26 @@ Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.jso
   }
 }
 ```
+
+</details>
+
+<details>
+<summary>Claude Code</summary>
+
+The recommended approach is a project-scoped `.mcp.json` in the repository root so the server is only active for this project and doesn't pollute your global config:
+
+```json
+{
+  "mcpServers": {
+    "PDFDashboardWithMCP": {
+      "command": "uv",
+      "args": ["run", "--directory", "/absolute/path/to/PDFDashboardWithMCP", "mcp_server/server.py"]
+    }
+  }
+}
+```
+
+Claude Code picks up `.mcp.json` automatically when you open the project. No extra setup needed.
 
 </details>
 
