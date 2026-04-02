@@ -17,8 +17,9 @@ dependencies = [
 ]
 
 [tool.uv]
-exclude-newer = "5 days"
+exclude-newer = "3 days"
 constraint-dependencies = [
     "requests>=2.33.0",
     "langchain-core>=1.2.11",
+    "aiohttp>=3.13.4",
 ]
