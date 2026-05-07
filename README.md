@@ -1,6 +1,21 @@
+<div align="center">
+    
 # PDF Dashboard With MCP
 
+<p align="center">
+  <a href="https://streamlit.io/"><img src="https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit" /></a>
+  <a href="https://www.langchain.com/"><img src="https://img.shields.io/badge/LangChain-1C3C3C?logo=langchain&logoColor=white" alt="LangChain" /></a>
+  <a href="https://pymupdf.readthedocs.io/"><img src="https://img.shields.io/badge/PDF-PyMuPDF4LLM-094D8E" alt="PyMuPDF4LLM" /></a>
+  <a href="https://ollama.com/"><img src="https://img.shields.io/badge/LLM-Ollama-black?logo=ollama&logoColor=white" alt="Ollama" /></a>
+  <a href="https://www.trychroma.com/"><img src="https://img.shields.io/badge/vectorstore-Chroma-FF6B35" alt="Chroma" /></a>
+  <a href="https://docs.astral.sh/uv/"><img src="https://img.shields.io/badge/package%20manager-uv-DE5FE9" alt="uv" /></a>
+  <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-mcp%5Bcli%5D-black" alt="MCP" /></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python 3.11+" />
+</p>
+
 Upload PDFs, extract their text via GLM-OCR(Ollama)/PyMuPDF, and chat with the document using a local LLM. Everything runs on your machine through [Ollama](https://ollama.com) — no API keys or internet connection required.
+
+</div>
 
 ## Features
 
