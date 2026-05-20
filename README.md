@@ -13,22 +13,22 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-blue.svg" alt="Python 3.11+" />
 </p>
 
-Upload PDFs, extract their text via GLM-OCR(Ollama)/PyMuPDF, and chat with the document using a local LLM. Everything runs on your machine through [Ollama](https://ollama.com) — no API keys or internet connection required.
+Upload PDFs, extract text with PyMuPDF or GLM-OCR (Ollama), and ask questions against the document with a local Ollama model. No API keys.
 
 </div>
 
 ## Features
 
-- **PDF extraction** — fast text-layer extraction via PyMuPDF; automatic GLM-OCR fallback for scanned/image-based PDFs
-- **Per-document RAG** — each uploaded PDF gets its own Chroma vector collection
-- **Local LLM chat** — agentic Q&A with inline citations powered by Ollama; pick any installed Ollama model from the dropdown
-- **Markdown viewer** — browse extracted text, preview chunks, and download the markdown
+- **PDF extraction**: PyMuPDF for text layers; GLM-OCR when the PDF is scanned or image-only
+- **Per-document RAG**: each upload gets its own Chroma collection
+- **Local chat**: LangChain agent with inline citations; choose any installed Ollama model from the dropdown
+- **Markdown viewer**: read extracted text, preview chunks, download markdown
 
 ## Prerequisites
 
 - Python 3.11+
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) — Python package manager
-- [Ollama](https://ollama.com/download) — local LLM runtime
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Ollama](https://ollama.com/download)
 
 ## Setup
 
@@ -48,9 +48,9 @@ uv sync
 **3. Pull Ollama models**
 
 ```powershell
-ollama pull qwen2.5:3b       # chat / agent (or any other chat model)
+ollama pull qwen2.5:3b       # chat (or another chat model)
 ollama pull nomic-embed-text # embeddings
-ollama pull glm-ocr          # OCR fallback (scanned PDFs)
+ollama pull glm-ocr          # OCR for scanned PDFs
 ```
 
 **4. Run the app**
@@ -63,18 +63,16 @@ Open [http://localhost:8501](http://localhost:8501) in your browser.
 
 ## Usage
 
-1. **Upload PDF** — go to the Upload PDF page, select a PDF, and wait for the extraction pipeline to finish
-2. **Chat** — switch to the Chat page, pick your PDF and any installed Ollama model from the dropdowns, and ask questions
+1. **Upload PDF**: open Upload PDF, select a file, wait for extraction to finish
+2. **Chat**: open Chat, pick the PDF and an Ollama model, ask questions
 
 ## Project Structure
-
-
 
 ```
 app/
 ├── main.py                       # Entry point, page navigation
 ├── app_pages/
-│   ├── landing.py                # Home / welcome page
+│   ├── landing.py                # Home page
 │   ├── process_pdf_upload.py     # Upload + pipeline UI
 │   ├── pdf_library.py            # Browse uploaded PDFs (read-only viewer)
 │   └── process_pdf.py            # Viewer + chat UI
@@ -91,32 +89,30 @@ data/                             # Runtime data (gitignored)
 ```
 
 > [!NOTE]
-> For a detailed breakdown of every file, execution order, and data flow, see [APP_STRUCTURE.md](APP_STRUCTURE.md).
+> File-by-file breakdown, execution order, and data flow: [APP_STRUCTURE.md](APP_STRUCTURE.md).
 
-## Streamlit Dashboard
+## Pages
 
-The app is a three-page Streamlit dashboard:
+| Page | What it does |
+|------|--------------|
+| **Home** | Links and setup summary |
+| **Upload PDF** | Run extraction (text layer, OCR fallback, chunking, embedding); download markdown |
+| **PDF Library** | Open past uploads; view markdown and chunk previews without re-running extraction |
+| **Chat** | Query an indexed PDF with citations |
 
-| Page | Description |
-|------|-------------|
-| **Home** | Welcome page with a quick-start overview |
-| **Upload PDF** | Select a PDF, watch the extraction pipeline run in real time (text layer → OCR fallback → chunking → embedding), then download the extracted markdown |
-| **PDF Library** | Browse all previously uploaded PDFs; view extracted markdown and chunk previews without re-running the pipeline |
-| **Chat** | Pick an indexed PDF and any installed Ollama model, ask questions, and get answers with inline source citations |
-
-The pipeline progress is shown live inside an `st.status` block. After a PDF is processed its vector collection persists in `data/process_chroma/`, so the next session loads instantly without re-running the pipeline.
+Extraction progress shows in an `st.status` block. After processing, the Chroma collection lives in `data/process_chroma/` and loads on the next run without re-extracting.
 
 ## MCP Server
 
-The included MCP server exposes the vector store to any MCP-compatible client (Claude Desktop, Cursor, etc.) with two tools:
+Two tools for MCP clients (Claude Desktop, Cursor, Claude Code):
 
-- **`list_documents`** — returns all indexed document collections
-- **`get_document(document, query)`** — searches a collection and returns relevant chunks
+- **`list_documents`**: indexed document collections
+- **`get_document(document, query)`**: semantic search over a collection
 
 <details>
 <summary>Claude Desktop</summary>
 
-Add to `claude_desktop_config.json` (usually `%APPDATA%\Claude\claude_desktop_config.json` on Windows), or use `.mcp.json` in the project root to keep it project-scoped:
+Add to `claude_desktop_config.json` (Windows: `%APPDATA%\Claude\claude_desktop_config.json`) or use `.mcp.json` in the project root:
 
 ```json
 {
@@ -134,7 +130,7 @@ Add to `claude_desktop_config.json` (usually `%APPDATA%\Claude\claude_desktop_co
 <details>
 <summary>Cursor</summary>
 
-Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.json`):
+Add to `.cursor/mcp.json` in the project root or global `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -152,7 +148,7 @@ Add to `.cursor/mcp.json` in your project root (or the global `~/.cursor/mcp.jso
 <details>
 <summary>Claude Code</summary>
 
-The recommended approach is a project-scoped `.mcp.json` in the repository root so the server is only active for this project and doesn't pollute your global config:
+Project-scoped `.mcp.json` in the repo root keeps the server tied to this repo:
 
 ```json
 {
@@ -165,13 +161,13 @@ The recommended approach is a project-scoped `.mcp.json` in the repository root 
 }
 ```
 
-Claude Code picks up `.mcp.json` automatically when you open the project. No extra setup needed.
+Claude Code reads `.mcp.json` when you open the project.
 
 </details>
 
-Replace `/absolute/path/to/PDFDashboardWithMCP` with the absolute path to your cloned repository.
+Replace `/absolute/path/to/PDFDashboardWithMCP` with your clone path.
 
-> Ollama must be running with `nomic-embed-text` pulled for the MCP server to load collections.
+> Ollama must be running with `nomic-embed-text` pulled before the MCP server can load collections.
 
 ## Tech Stack
 
@@ -182,6 +178,6 @@ Replace `/absolute/path/to/PDFDashboardWithMCP` with the absolute path to your c
 | OCR fallback | Ollama glm-ocr |
 | Embeddings | Ollama nomic-embed-text |
 | Vector store | Chroma (langchain-chroma) |
-| LLM / agent | Any Ollama chat model (e.g. qwen2.5:3b), LangChain |
+| LLM / agent | Ollama chat model (e.g. qwen2.5:3b), LangChain |
 | Package manager | uv |
 | MCP server | mcp[cli] |
